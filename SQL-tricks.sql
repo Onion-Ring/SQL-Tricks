@@ -49,5 +49,3 @@ from production.[product]
 select * 
 from humanresources.department
 where groupname like 'Sales%'
-
-
