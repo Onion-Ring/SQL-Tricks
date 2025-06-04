@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inserting and updating</title>
+    <link rel="stylesheet" href="./css/content_page.css">
+</head>
+
+<body>
+    <header>
+        <h1>Inserting and updating</h1>
+    </header>
+    <main>
+        <div class="main-container">
+
+            <div class="trick">
+                <h3>Inserting default values</h3>
+                <p class="sql">
+                    <span class="sql-keyword">create</span> <span class="sql-keyword">table</span> <span
+                        class="sql-identifier">D</span> (id <span class="sql-keyword">integer</span> <span
+                        class="sql-keyword">default</span> <span class="sql-number">0</span>)                   
+                </p>
+                <p class="sql">
+                     <span class="sql-keyword">insert</span> <span class="sql-keyword">into</span> <span
+                        class="sql-identifier">D</span> <span class="sql-keyword">values</span> (<span
+                        class="sql-keyword">default</span>)
+                </p>
+            </div>
+
+            <div class="trick">
+                <h3>Overriding default value with null value</h3>
+                <p class="sql">
+                    <span class="sql-keyword">insert</span> <span class="sql-keyword">into</span> <span
+                        class="sql-identifier">D</span> <span class="sql-keyword">values</span> (<span
+                        class="sql-keyword">null</span>)                    
+                </p>
+                <p class="sql">
+                    <span class="sql-keyword">drop</span> <span class="sql-keyword">table</span> <span
+                        class="sql-identifier">D</span>
+                </p>
+            </div>
+
+            <div class="trick">
+                <h3>Copying values from one table into another</h3>
+                <p class="sql">
+                    <span class="sql-keyword">create</span> <span class="sql-keyword">table</span> <span
+                        class="sql-identifier">departmentTest</span> (
+                    &nbsp;deptno <span class="sql-keyword">int</span> <span class="sql-keyword">not
+                        null</span>,
+                    &nbsp;deptname <span class="sql-keyword">nvarchar</span>(<span class="sql-number">100</span>)
+                    <span class="sql-keyword">not null</span>,
+                    &nbsp;deptlocation <span class="sql-keyword">nvarchar</span>(<span class="sql-number">200</span>)
+                    <span class="sql-keyword">not null</span>,
+                    &nbsp;&nbsp;<span class="sql-keyword">constraint</span> <span
+                        class="sql-identifier">pk_dept_test</span> <span class="sql-keyword">primary key</span>
+                    (deptno)
+                    );
+
+
+
+
+                </p>
+                <p class="sql">
+                    <span class="sql-keyword">insert</span> <span class="sql-keyword">into</span> <span
+                        class="sql-identifier">departmentTest</span> <span class="sql-keyword">select</span> * <span
+                        class="sql-keyword">from</span> <span class="sql-identifier">department</span>
+                </p>
+                <p class="sql">
+                    <span class="sql-keyword">drop</span> <span class="sql-keyword">table</span> <span
+                        class="sql-identifier">departmentTest</span>
+                </p>
+            </div>
+
+            <div class="trick">
+                <h3>Copying table definition</h3>
+                <p class="sql">
+                    <span class="sql-keyword">select</span> * <span class="sql-keyword">into</span> <span
+                        class="sql-identifier">department_copy</span> <span class="sql-keyword">from</span> <span
+                        class="sql-identifier">department</span> <span class="sql-keyword">where</span> <span
+                        class="sql-number">1</span> = <span class="sql-number">0</span>                    
+                </p>
+                <p class="sql">
+                    <span class="sql-keyword">drop</span> <span class="sql-keyword">table</span> <span
+                        class="sql-identifier">department_copy</span>
+                </p>
+            </div>
+
+            <div class="trick">
+                <h3>Updating values with values from another table</h3>
+                <p class="sql">
+                    <span class="sql-keyword">create</span> <span class="sql-keyword">table</span> <span
+                        class="sql-identifier">salary_test</span> (salary <span class="sql-keyword">integer</span> <span
+                        class="sql-keyword">default</span> <span class="sql-number">1000</span>)
+                </p>
+
+                <p class="sql">
+                    <span class="sql-keyword">insert</span> <span class="sql-keyword">into</span> <span
+                        class="sql-identifier">salary_test</span> <span class="sql-keyword">values</span> (<span
+                        class="sql-keyword">default</span>)
+                </p>
+                <p class="sql">
+                    <span class="sql-keyword">update</span> <span class="sql-identifier">employee</span> <span
+                        class="sql-keyword">set</span> salary = st.salary * <span class="sql-number">2</span> <span
+                        class="sql-keyword">from</span> <span class="sql-identifier">salary_test</span> st
+                    <span class="sql-keyword">where</span> employee.salary &lt; <span class="sql-number">1500</span>
+                </p>
+                <p class="sql"> <span class="sql-keyword">drop</span> <span class="sql-keyword">table</span> <span
+                        class="sql-identifier">salary_test</span></p>
+            </div>
+
+
+
+
+        </div>
+    </main>
+</body>
+
+</html>

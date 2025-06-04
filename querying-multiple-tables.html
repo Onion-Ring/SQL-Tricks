@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Querying multiple tables</title>
+    <link rel="stylesheet" href="./css/content_page.css">
+</head>
+
+<body>
+    <header>
+        <h1>Querying multiple tables</h1>
+    </header>
+    <main>
+        <div class="main-container">
+
+            <div class="trick">
+                <h3>Stack rowsets</h3>
+                <h4>UNION ALL combines rows from multiple row sources into one result set (include duplicates)</h4>
+                <h4>If you want to filter out duplicates then use UNION...</h4>
+                <p class="sql">
+                    <span class="sql-keyword">select</span> <span class="sql-identifier">empname</span>, <span
+                        class="sql-identifier">deptno</span> <span class="sql-keyword">from</span> <span
+                        class="sql-identifier">employee</span> <span class="sql-keyword">where</span> <span
+                        class="sql-identifier">deptno</span> = <span class="sql-number">20</span>
+                    <span class="sql-keyword">union all</span>
+                    <span class="sql-keyword">select</span> <span
+                        class="sql-string">'-----------------------------'</span>, <span class="sql-keyword">null</span>
+                    <span class="sql-keyword">union all</span>
+                    <span class="sql-keyword">select</span> <span class="sql-identifier">deptname</span>, <span
+                        class="sql-identifier">deptno</span> <span class="sql-keyword">from</span> <span
+                        class="sql-identifier">department</span>
+                </p>
+            </div>
+
+            <div class="trick">
+                <h3>Combining related rows from different tables</h3>
+                <h4>Using explicit JOIN</h4>
+                <p class="sql">
+                    <span class="sql-keyword">select</span> <span class="sql-identifier">d.deptname</span>, <span
+                        class="sql-identifier">d.deptlocation</span>, <span class="sql-identifier">e.empname</span>
+                    <span class="sql-keyword">from</span> <span class="sql-identifier">department d</span> <span
+                        class="sql-keyword">inner join</span> <span class="sql-identifier">employee e</span> <span
+                        class="sql-keyword">on</span> <span class="sql-identifier">e.deptno</span> = <span
+                        class="sql-identifier">d.deptno</span>
+                    <span class="sql-keyword">where</span> <span class="sql-identifier">d.deptno</span> = <span
+                        class="sql-number">10</span>
+                </p>
+                <h4>Using implicit JOIN</h4>
+                <p class="sql">
+                    <span class="sql-keyword">select</span> <span class="sql-identifier">d.deptname</span>, <span
+                        class="sql-identifier">d.deptlocation</span>, <span class="sql-identifier">e.empname</span>
+                    <span class="sql-keyword">from</span> <span class="sql-identifier">department d</span>, <span
+                        class="sql-identifier">employee e</span>
+                    <span class="sql-keyword">where</span> <span class="sql-identifier">e.deptno</span> = <span
+                        class="sql-identifier">d.deptno</span> <span class="sql-keyword">and</span> <span
+                        class="sql-identifier">d.deptno</span> = <span class="sql-number">10</span>
+                </p>
+            </div>
+
+            <div class="trick">
+                <h3>Finding rows in common between two tables</h3>
+                <p class="sql">
+                    <span class="sql-keyword">create view</span> <span
+                        class="sql-identifier">vw_employeeProgrammers</span>
+                    <span class="sql-keyword">as select</span> <span class="sql-identifier">empname</span>, <span
+                        class="sql-identifier">job</span>, <span class="sql-identifier">salary</span>
+                    <span class="sql-keyword">from</span> <span class="sql-identifier">employee</span>
+                    <span class="sql-keyword">where</span> <span class="sql-identifier">job</span> = <span
+                        class="sql-string">'PROGRAMMER'</span>
+                </p>
+                <h4>Implicit JOIN</h4>
+                <p class="sql">
+                    <span class="sql-keyword">select</span> <span class="sql-identifier">e.*</span>
+                    <span class="sql-keyword">from</span> <span class="sql-identifier">employee e</span>, <span
+                        class="sql-identifier">vw_employeeProgrammers v</span>
+                    <span class="sql-keyword">where</span> <span class="sql-identifier">e.empname</span> = <span
+                        class="sql-identifier">v.empname</span>
+                    <span class="sql-keyword">and</span> <span class="sql-identifier">e.job</span> = <span
+                        class="sql-identifier">v.job</span>
+                    <span class="sql-keyword">and</span> <span class="sql-identifier">e.salary</span> = <span
+                        class="sql-identifier">v.salary</span>
+                </p>
+                <h4>Explicit JOIN</h4>
+                <p class="sql">
+                    <span class="sql-keyword">select</span> <span class="sql-identifier">e.*</span>
+                    <span class="sql-keyword">from</span> <span class="sql-identifier">employee e</span>
+                    <span class="sql-keyword">inner join</span> <span class="sql-identifier">vw_employeeProgrammers
+                        v</span> <span class="sql-keyword">on</span>
+                    (<span class="sql-identifier">e.empname</span> = <span class="sql-identifier">v.empname</span>
+                    <span class="sql-keyword">and</span> <span class="sql-identifier">e.job</span> = <span
+                        class="sql-identifier">v.job</span>
+                    <span class="sql-keyword">and</span> <span class="sql-identifier">e.salary</span> = <span
+                        class="sql-identifier">v.salary</span>)
+                </p>
+            </div>
+
+            <div class="trick">
+                <h3>Finding rows from one table that do not exist in another</h3>
+                <h4>Using NOT IN + subquery</h4>
+                <p class="sql">
+                    <span class="sql-keyword">select</span> <span class="sql-identifier">deptno</span>
+                    <span class="sql-keyword">from</span> <span class="sql-identifier">department</span>
+                    <span class="sql-keyword">where</span> <span class="sql-identifier">deptno</span> <span
+                        class="sql-keyword">not in</span> (<span class="sql-keyword">select</span> <span
+                        class="sql-identifier">deptno</span> <span class="sql-keyword">from</span> <span
+                        class="sql-identifier">employee</span>)
+                </p>
+                <h4>Using EXCEPT</h4>
+                <p class="sql">
+                    <span class="sql-keyword">select</span> <span class="sql-identifier">deptno</span> <span
+                        class="sql-keyword">from</span> <span class="sql-identifier">department</span>
+                    <span class="sql-keyword">except</span>
+                    <span class="sql-keyword">select</span> <span class="sql-identifier">deptno</span> <span
+                        class="sql-keyword">from</span> <span class="sql-identifier">employee</span>
+                </p>
+            </div>
+
+            <div class="trick">
+                <h3>Retrieving rows from one table that don't correspond to rows in another table</h3>
+                <h4>Using LEFT JOIN (will return all the rows from the left table and the matches from the right table)
+                </h4>
+                <p class="sql">
+                    <span class="sql-keyword">select</span> <span class="sql-identifier">d.*</span> <span
+                        class="sql-keyword">from</span> <span class="sql-identifier">department d</span>
+                    <span class="sql-keyword">left join</span> <span class="sql-identifier">employee e</span> <span
+                        class="sql-keyword">on</span> <span class="sql-identifier">d.deptno</span> = <span
+                        class="sql-identifier">e.deptno</span>
+                    <span class="sql-keyword">where</span> <span class="sql-identifier">e.deptno</span> <span
+                        class="sql-keyword">is null</span>
+                </p>
+                <h4>Using RIGHT JOIN (will return all the rows from the right table and the matches from the left table)
+                </h4>
+                <p class="sql">
+                    <span class="sql-keyword">select</span> <span class="sql-identifier">d.*</span> <span
+                        class="sql-keyword">from</span> <span class="sql-identifier">employee e</span>
+                    <span class="sql-keyword">right join</span> <span class="sql-identifier">department d</span> <span
+                        class="sql-keyword">on</span> <span class="sql-identifier">d.deptno</span> = <span
+                        class="sql-identifier">e.deptno</span>
+                    <span class="sql-keyword">where</span> <span class="sql-identifier">e.deptno</span> <span
+                        class="sql-keyword">is null</span>
+                </p>
+            </div>
+
+            <div class="trick">
+                <h3>Adding joins without reducing the results</h3>
+                <h4>INNER JOIN + LEFT JOIN to preserve all rows</h4>
+                <p class="sql">
+                    <span class="sql-keyword">select</span> <span class="sql-identifier">e.empname</span>, <span
+                        class="sql-identifier">d.deptlocation</span>, <span class="sql-identifier">eb.receivedate</span>
+                    <span class="sql-keyword">from</span> <span class="sql-identifier">employee e</span>
+                    <span class="sql-keyword">inner join</span> <span class="sql-identifier">department d</span> <span
+                        class="sql-keyword">on</span> <span class="sql-identifier">d.deptno</span> = <span
+                        class="sql-identifier">e.deptno</span>
+                    <span class="sql-keyword">left join</span> <span class="sql-identifier">employee_bonus eb</span>
+                    <span class="sql-keyword">on</span> <span class="sql-identifier">eb.empno</span> = <span
+                        class="sql-identifier">e.empno</span>
+                    <span class="sql-keyword">order by case when</span> <span
+                        class="sql-identifier">eb.receivedate</span> <span class="sql-keyword">is null then</span>
+                    <span class="sql-identifier">d.deptlocation</span>
+                    <span class="sql-keyword">else</span>
+                    <span class="sql-function">convert</span>(<span class="sql-identifier">NVARCHAR</span>, <span
+                        class="sql-identifier">eb.receivedate</span>, <span class="sql-number">23</span>)
+                    <span class="sql-keyword">end</span>
+                </p>
+
+                <h4>Using scalar subquery</h4>
+                <p class="sql">
+                    <span class="sql-keyword">select</span> <span class="sql-identifier">e.empname</span>, <span
+                        class="sql-identifier">d.deptlocation</span>,
+                    (<span class="sql-keyword">select</span> <span class="sql-identifier">receivedate</span> <span
+                        class="sql-keyword">from</span> <span class="sql-identifier">employee_bonus eb</span> <span
+                        class="sql-keyword">where</span> <span class="sql-identifier">eb.empno</span> = <span
+                        class="sql-identifier">e.empno</span>) <span class="sql-keyword">as</span> <span
+                        class="sql-identifier">received</span>
+                    <span class="sql-keyword">from</span> <span class="sql-identifier">employee e</span>
+                    <span class="sql-keyword">inner join</span> <span class="sql-identifier">department d</span> <span
+                        class="sql-keyword">on</span> <span class="sql-identifier">d.deptno</span> = <span
+                        class="sql-identifier">e.deptno</span>
+                </p>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

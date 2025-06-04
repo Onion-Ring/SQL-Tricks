@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Retrieving records</title>
+  <link rel="stylesheet" href="./css/content_page.css">  
+</head>
+<body>
+
+	<header>
+	<h1>Retrieving records</h1>
+	</header>
+
+
+
+  <main>	
+	<div class="main-container">
+				
+		<div class="trick">
+  <h3>Reference aliased column in the WHERE clause</h3>
+  <p class="sql">
+    <span class="sql-keyword">select</span> * <span class="sql-keyword">from</span> (<span class="sql-keyword">select</span> <span class="sql-identifier">[name]</span> <span class="sql-keyword">as</span> <span class="sql-identifier">n</span>,
+    <span class="sql-identifier">groupname</span> <span class="sql-keyword">as</span> <span class="sql-identifier">gn</span>
+    <span class="sql-keyword">from</span> <span class="sql-identifier">humanresources.department</span>) <span class="sql-identifier">department</span>
+    <span class="sql-keyword">where</span> <span class="sql-identifier">gn</span> = <span class="sql-string">'Sales and Marketing'</span>
+  </p>
+</div>
+
+<div class="trick">
+  <h3>Concatenate columns</h3>
+  <p class="sql">
+    <span class="sql-keyword">select</span> <span class="sql-identifier">[name]</span> + <span class="sql-string">' department belongs to group '</span> +
+    <span class="sql-identifier">groupname</span> <span class="sql-keyword">as</span> <span class="sql-identifier">msg</span>
+    <span class="sql-keyword">from</span> <span class="sql-identifier">humanresources.department</span>
+  </p>
+</div>
+
+<div class="trick">
+  <h3>Conditional logic in SELECT statements</h3>
+  <p class="sql">
+    <span class="sql-keyword">select</span> <span class="sql-identifier">[name]</span>, <span class="sql-identifier">productnumber</span>, <span class="sql-identifier">reorderpoint</span>,
+    <span class="sql-keyword">case</span>
+    <span class="sql-keyword">when</span> <span class="sql-identifier">reorderpoint</span> &lt; <span class="sql-number">750</span> <span class="sql-keyword">then</span> <span class="sql-string">'critic'</span>
+    <span class="sql-keyword">when</span> <span class="sql-identifier">reorderpoint</span> &gt;= <span class="sql-number">750</span> <span class="sql-keyword">then</span> <span class="sql-string">'safe'</span>
+    <span class="sql-keyword">end as</span> <span class="sql-identifier">[reorderpoint_status]</span>
+    <span class="sql-keyword">from</span> <span class="sql-identifier">production.[product]</span>
+  </p>
+</div>
+
+<div class="trick">
+  <h3>Limiting rows returned</h3>
+  <p class="sql">
+    <span class="sql-keyword">select top</span> <span class="sql-number">14</span> * <span class="sql-keyword">from</span> <span class="sql-identifier">production.[product]</span>
+  </p>
+</div>
+
+<div class="trick">
+  <h3>Returning n random records</h3>
+  <p class="sql">
+    <span class="sql-keyword">select top</span> <span class="sql-number">10</span> * <span class="sql-keyword">from</span> <span class="sql-identifier">production.[product]</span>
+    <span class="sql-keyword">order by</span> <span class="sql-function">newid()</span>
+  </p>
+</div>
+
+<div class="trick">
+  <h3>Coalescing (returning non null values in place of those nulls)</h3>
+
+  <h4>Using coalesce() function</h4>
+  <p class="sql">
+    <span class="sql-keyword">select</span> <span class="sql-identifier">productid</span>, <span class="sql-identifier">[name]</span>,
+    <span class="sql-function">coalesce</span>(<span class="sql-identifier">color</span>, <span class="sql-string">'None'</span>) <span class="sql-keyword">as</span> <span class="sql-identifier">color</span>
+    <span class="sql-keyword">from</span> <span class="sql-identifier">production.[product]</span>
+  </p>
+
+  <h4>Using conditional on select</h4>
+  <p class="sql">
+    <span class="sql-keyword">select</span> <span class="sql-identifier">productid</span>, <span class="sql-identifier">[name]</span>,
+    <span class="sql-keyword">case when</span> <span class="sql-identifier">color</span> <span class="sql-keyword">is null then</span> <span class="sql-string">'None'</span>
+    <span class="sql-keyword">else</span> <span class="sql-identifier">color</span> <span class="sql-keyword">end as</span> <span class="sql-identifier">color</span>
+    <span class="sql-keyword">from</span> <span class="sql-identifier">production.[product]</span>
+  </p>
+</div>
+
+<div class="trick">
+  <h3>Searching patterns (LIKE operator)</h3>
+  <p class="sql">
+    <span class="sql-keyword">select</span> * <span class="sql-keyword">from</span> <span class="sql-identifier">humanresources.department</span>
+    <span class="sql-keyword">where</span> <span class="sql-identifier">groupname</span> <span class="sql-keyword">like</span> <span class="sql-string">'Sales%'</span>
+  </p>
+</div>
+							
+	</div>
+  </main>
+  
+</body>
+</html>

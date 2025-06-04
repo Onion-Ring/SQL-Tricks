@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sorting queries</title>
+  <link rel="stylesheet" href="./css/content_page.css">
+</head>
+
+<body>
+  <header>
+    <h1>Sorting queries</h1>
+  </header>
+  <main>
+    <div class="main-container">
+
+      <div class="trick">
+        <h3>Sorting by substrings</h3>
+        <p class="sql">
+          <span class="sql-keyword">select</span> <span class="sql-identifier">businessentityid</span>,
+          <span class="sql-function">coalesce</span>(<span class="sql-identifier">title</span>, <span
+            class="sql-string">'None'</span>) <span class="sql-keyword">as</span> <span
+            class="sql-identifier">title</span>,
+          <span class="sql-identifier">firstname</span>, <span class="sql-identifier">modifieddate</span>,
+          <span class="sql-function">substring</span>(<span class="sql-identifier">firstname</span>, <span
+            class="sql-function">len</span>(<span class="sql-identifier">firstname</span>) - <span
+            class="sql-number">2</span>, <span class="sql-number">3</span>)
+          <span class="sql-keyword">from</span> <span class="sql-identifier">person.person</span>
+          <span class="sql-keyword">order by</span> <span class="sql-function">substring</span>(<span
+            class="sql-identifier">firstname</span>, <span class="sql-function">len</span>(<span
+            class="sql-identifier">firstname</span>) - <span class="sql-number">2</span>, <span
+            class="sql-number">3</span>)
+        </p>
+      </div>
+
+      <div class="trick">
+        <h3>Sorting mixed alphanumeric data (same column)</h3>
+        <h4>Let's create a view where we will mix numeric data (departmentid) and alphabetic data (name)</h4>
+        <p class="sql">
+          <span class="sql-keyword">create view</span> <span class="sql-identifier">vw_alphanumeric</span> <span
+            class="sql-keyword">as select</span>
+          <span class="sql-function">concat</span>(<span class="sql-identifier">departmentid</span>, <span
+            class="sql-string">' '</span>, <span class="sql-identifier">[name]</span>) <span
+            class="sql-keyword">as</span> <span class="sql-identifier">[data]</span>
+          <span class="sql-keyword">from</span> <span class="sql-identifier">humanresources.department</span>
+        </p>
+
+        <h4>Order by numeric data:</h4>
+        <h4>It searches on the DATA column the alphabetic characters and then it removes them, so we will be ordering by
+          numeric data</h4>
+        <p class="sql">
+          <span class="sql-keyword">select</span> * <span class="sql-keyword">from</span> <span
+            class="sql-identifier">vw_alphanumeric</span>
+          <span class="sql-keyword">order by</span>
+          <span class="sql-keyword">cast</span>(
+          <span class="sql-function">replace</span>(<span class="sql-identifier">[data]</span>,
+          <span class="sql-function">replace</span>(<span class="sql-function">translate</span>(<span
+            class="sql-identifier">[data]</span>, <span class="sql-string">'0123456789'</span>, <span
+            class="sql-string">'##########'</span>), <span class="sql-string">'#'</span>, <span
+            class="sql-string">''</span>)
+          , <span class="sql-string">''</span>)
+          <span class="sql-keyword">as int</span>)
+        </p>
+
+        <h4>Order by alphabetic data:</h4>
+        <h4>We simply remove the numbers from the DATA column</h4>
+        <p class="sql">
+          <span class="sql-keyword">select</span> * <span class="sql-keyword">from</span> <span
+            class="sql-identifier">vw_alphanumeric</span>
+          <span class="sql-keyword">order by</span> <span class="sql-function">replace</span>(<span
+            class="sql-function">translate</span>(<span class="sql-identifier">[data]</span>, <span
+            class="sql-string">'0123456789'</span>, <span class="sql-string">'##########'</span>), <span
+            class="sql-string">'#'</span>, <span class="sql-string">''</span>)
+        </p>
+      </div>
+
+      <div class="trick">
+        <h3>Sorting with null values</h3>
+        <h4>"is_null" column purpose is to separate the null values from the non-null values when sorting</h4>
+        <p class="sql">
+          <span class="sql-keyword">select</span> <span class="sql-identifier">productid</span>, <span
+            class="sql-identifier">[name]</span>, <span class="sql-identifier">productsubcategoryid</span>
+          <span class="sql-keyword">from</span> (<span class="sql-keyword">select</span> <span
+            class="sql-identifier">productid</span>, <span class="sql-identifier">[name]</span>, <span
+            class="sql-identifier">productsubcategoryid</span>,
+          <span class="sql-keyword">case when</span> <span class="sql-identifier">productsubcategoryid</span> <span
+            class="sql-keyword">is null then</span> <span class="sql-number">0</span> <span
+            class="sql-keyword">else</span> <span class="sql-number">1</span> <span class="sql-keyword">end as</span>
+          <span class="sql-identifier">is_null</span>
+          <span class="sql-keyword">from</span> <span class="sql-identifier">production.[product]</span>) <span
+            class="sql-identifier">[product]</span>
+          <span class="sql-keyword">order by</span> <span class="sql-identifier">is_null</span> <span
+            class="sql-keyword">desc</span>, <span class="sql-identifier">productsubcategoryid</span> <span
+            class="sql-keyword">desc</span>
+        </p>
+      </div>
+
+      <div class="trick">
+        <h3>Sorting based on a conditional logic</h3>
+        <p class="sql">
+          <span class="sql-keyword">select</span> <span class="sql-identifier">productid</span>, <span
+            class="sql-identifier">locationid</span>, <span class="sql-identifier">shelf</span>, <span
+            class="sql-identifier">modifieddate</span>, <span class="sql-identifier">quantity</span>
+          <span class="sql-keyword">from</span> <span class="sql-identifier">[production].[productinventory]</span>
+          <span class="sql-keyword">order by</span> <span class="sql-identifier">shelf</span>,
+          <span class="sql-keyword">case</span>
+          <span class="sql-keyword">when</span> <span class="sql-identifier">shelf</span> = <span
+            class="sql-string">'A'</span> <span class="sql-keyword">then</span> <span
+            class="sql-identifier">productid</span>
+          <span class="sql-keyword">else</span>
+          <span class="sql-keyword">case</span>
+          <span class="sql-keyword">when</span> <span class="sql-identifier">shelf</span> = <span
+            class="sql-string">'N/A'</span> <span class="sql-keyword">then</span> <span
+            class="sql-identifier">modifieddate</span>
+          <span class="sql-keyword">else</span> <span class="sql-identifier">Quantity</span>
+          <span class="sql-keyword">end</span>
+          <span class="sql-keyword">end</span>
+        </p>
+      </div>
+
+    </div>
+  </main>
+</body>
+
+</html>

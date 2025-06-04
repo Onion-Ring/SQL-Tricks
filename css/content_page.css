@@ -1,0 +1,60 @@
+   main {
+     padding: 2rem;
+     display: flex;
+     justify-content: center;
+   }
+
+   .main-container {
+     background-color: #FFF;
+     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+     border-radius: 16px;
+     padding: 2rem;
+     max-width: 1200px;
+     width: 100%;
+   }
+
+   h1 {
+     text-align: center;
+   }
+
+   .trick {
+     background-color: #ffbc75;
+     padding: 1px;
+     border-radius: 10px;
+     margin-bottom: 15px;
+   }
+
+   h3 {
+     margin-left: 4px;
+   }
+
+   .sql {
+     background-color: #2d2d2d;
+     margin: 5px;
+     color: #f8f8f2;
+     padding: 1rem;
+     border-radius: 8px;
+     overflow-x: auto;
+     line-height: 1.5;
+   }
+
+   .sql-keyword {
+     color: #ff79c6;
+     font-weight: bold;
+   }
+
+   .sql-function {
+     color: #8be9fd;
+   }
+
+   .sql-identifier {
+     color: #f1fa8c;
+   }
+
+   .sql-string {
+     color: #f0932b;
+   }
+
+   .sql-number {
+     color: #bd93f9;
+   }
