@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metadata queries</title>
+  <link rel="stylesheet" href="./css/content_page.css">
+</head>
+
+<body>
+  <header>
+    <h1>Metadata queries</h1>
+  </header>
+  <main>
+    <div class="main-container">
+
+      <div class="trick">
+        <h3>Listing tables created in a Schema</h3>
+        <p class="sql">
+          <span class="sql-keyword">select</span> <span class="sql-identifier">table_name</span> <span
+            class="sql-keyword">from</span> <span class="sql-identifier">information_schema.tables</span> <span
+            class="sql-keyword">where</span> <span class="sql-identifier">table_schema</span> = <span
+            class="sql-string">'dbo'</span>
+        </p>
+      </div>
+
+      <div class="trick">
+        <h3>Listing views created in a Schema</h3>
+        <p class="sql">
+          <span class="sql-keyword">select</span> * <span class="sql-keyword">from</span> <span
+            class="sql-identifier">information_schema.views</span> <span class="sql-keyword">where</span> <span
+            class="sql-identifier">table_schema</span> = <span class="sql-string">'dbo'</span>
+        </p>
+      </div>
+
+      <div class="trick">
+        <h3>Listing table's columns</h3>
+        <p class="sql">
+          <span class="sql-keyword">select</span> <span class="sql-identifier">column_name</span>,<span
+            class="sql-identifier">data_type</span> <span class="sql-keyword">from</span> <span
+            class="sql-identifier">information_schema.columns</span> <span class="sql-keyword">where</span> <span
+            class="sql-identifier">table_name</span> = <span class="sql-string">'employee'</span>
+        </p>
+      </div>
+
+      <div class="trick">
+        <h3>Listing constraints on a table</h3>
+        <p class="sql">
+          <span class="sql-keyword">select</span> <span class="sql-identifier">constraint_name</span>, <span
+            class="sql-identifier">constraint_type</span> <span class="sql-keyword">from</span> <span
+            class="sql-identifier">information_schema.table_constraints</span> <span class="sql-keyword">where</span>
+          <span class="sql-identifier">table_name</span> = <span class="sql-string">'employee'</span>
+        </p>
+      </div>
+
+      <div class="trick">
+        <h3>Generating SQL statements</h3>
+        <p class="sql">
+          <span class="sql-keyword">select</span> <span class="sql-string">'alter table '</span> + <span
+            class="sql-identifier">table_name</span> + <span class="sql-string">' nocheck constraint '</span> + <span
+            class="sql-identifier">constraint_name</span> + <span class="sql-string">';'</span> <span
+            class="sql-identifier">cons</span> <span class="sql-keyword">from</span> <span
+            class="sql-identifier">information_schema.table_constraints</span> <span class="sql-keyword">where</span>
+          <span class="sql-identifier">constraint_type</span> = <span class="sql-string">'FOREIGN KEY'</span>
+        </p>
+      </div>
+
+    </div>
+  </main>
+</body>
+
+</html>
